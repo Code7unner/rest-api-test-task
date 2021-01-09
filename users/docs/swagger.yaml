@@ -1,0 +1,64 @@
+basePath: /
+definitions:
+  handlers.RegisterRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a users microservice.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Users API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: get token for user
+      parameters:
+      - description: Login body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Returns access token
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register user in db
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ""
+      summary: Returns status code
+      tags:
+      - auth
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
