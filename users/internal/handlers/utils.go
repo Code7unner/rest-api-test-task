@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"errors"
-	"github.com/code7unner/rest-api-test-task/users/internal/service"
 	"github.com/dgrijalva/jwt-go"
-	"time"
 )
 
 func errorResponse(message string) map[string]string {
@@ -19,23 +17,7 @@ func getUserIDFromToken(t interface{}) (int, error) {
 		return 0, errors.New("invalid token")
 	}
 	claims := userToken.Claims.(jwt.MapClaims)
-	userID := claims["id"].(float64)
+	userID := claims["id"].(int)
 
 	return int(userID), nil
-}
-
-func parseDate(value string) (time.Time, error) {
-	if value != "" {
-		return time.Parse(service.DateLayout, value)
-	}
-
-	return time.Time{}, nil
-}
-
-func parseDateTime(value string) (time.Time, error) {
-	if value != "" {
-		return time.Parse(service.DateTimeLayout, value)
-	}
-
-	return time.Time{}, nil
 }
