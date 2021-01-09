@@ -9,6 +9,7 @@ import (
 type Service interface {
 	Login(username, password string) (string, error)
 	Register(username, password string) error
+	GetUser(id int) (*models.Users, error)
 }
 
 type service struct {
@@ -37,6 +38,7 @@ func (s service) Login(username, password string) (string, error) {
 		return "", err
 	}
 
+	user.Password = password
 	token, err := auth.CreateToken(user, s.jwtSecret, s.expires)
 	if err != nil {
 		// TODO
@@ -64,4 +66,14 @@ func (s service) Register(username, password string) error {
 	}
 
 	return nil
+}
+
+func (s service) GetUser(id int) (*models.Users, error) {
+	user, err := s.users.GetByID(id)
+	if err != nil {
+		// TODO
+		return nil, err
+	}
+
+	return user, nil
 }

@@ -18,10 +18,17 @@ func New(s service.Service, jwtSecret []byte) *echo.Echo {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{AllowOrigins: []string{"*"}}))
 
-	hu := handlers.NewAuthHandler(s)
+	JWTmiddleware := middleware.JWT(jwtSecret)
+
+	ha := handlers.NewAuthHandler(s)
+	a := e.Group("/auth")
+	a.POST("/register", ha.Register)
+	a.POST("/login", ha.Login)
+
+	hu := handlers.NewUserHandler(s)
 	u := e.Group("/user")
-	u.POST("/register", hu.Register)
-	u.POST("/login", hu.Login)
+	u.Use(JWTmiddleware)
+	u.GET("/:id", hu.GetUser)
 
 	return e
 }
