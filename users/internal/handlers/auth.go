@@ -34,8 +34,12 @@ func (h AuthHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	err := h.service.Register(request.Username, request.Password)
+	_, err := h.service.Register(request.Username, request.Password)
 	switch err {
+	case service.ErrUserCreating:
+		return c.JSON(http.StatusBadRequest, nil)
+	case service.ErrUserPasswordInvalid:
+		return c.JSON(http.StatusBadRequest, nil)
 	case nil:
 		return c.JSON(http.StatusCreated, nil)
 	default:
@@ -60,8 +64,14 @@ func (h AuthHandler) Login(c echo.Context) error {
 
 	token, err := h.service.Login(request.Username, request.Password)
 	switch err {
+	case service.ErrUserNotFound:
+		return c.JSON(http.StatusNotFound, nil)
+	case service.ErrUserPasswordInvalid:
+		return c.JSON(http.StatusBadRequest, nil)
+	case service.ErrUserCreateJWTToken:
+		return c.JSON(http.StatusBadRequest, nil)
 	case nil:
-		return c.JSON(http.StatusCreated, token)
+		return c.JSON(http.StatusOK, token)
 	default:
 		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
 	}

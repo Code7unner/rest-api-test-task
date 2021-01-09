@@ -6,9 +6,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=mock/service_mock.go -package=service_mock Service
+
 type Service interface {
 	Login(username, password string) (string, error)
-	Register(username, password string) error
+	Register(username, password string) (*models.Users, error)
 	GetUser(id int) (*models.Users, error)
 }
 
@@ -29,30 +31,26 @@ func New(usersModel models.UsersImpl, jwtSecret string, expires int) Service {
 func (s service) Login(username, password string) (string, error) {
 	user, err := s.users.GetByName(username)
 	if err != nil {
-		// TODO
-		return "", err
+		return "", ErrUserNotFound
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		// TODO
-		return "", err
+		return "", ErrUserPasswordInvalid
 	}
 
 	user.Password = password
 	token, err := auth.CreateToken(user, s.jwtSecret, s.expires)
 	if err != nil {
-		// TODO
-		return "", err
+		return "", ErrUserCreateJWTToken
 	}
 
 	return token, nil
 }
 
-func (s service) Register(username, password string) error {
+func (s service) Register(username, password string) (*models.Users, error) {
 	hashPwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
-		// TODO
-		return err
+		return nil, ErrUserPasswordInvalid
 	}
 
 	newUser := &models.Users{
@@ -60,19 +58,17 @@ func (s service) Register(username, password string) error {
 		Password: string(hashPwd),
 	}
 
-	if err := s.users.Create(newUser); err != nil {
-		// TODO
-		return err
+	if _, err := s.users.Create(newUser); err != nil {
+		return nil, ErrUserCreating
 	}
 
-	return nil
+	return newUser, nil
 }
 
 func (s service) GetUser(id int) (*models.Users, error) {
 	user, err := s.users.GetByID(id)
 	if err != nil {
-		// TODO
-		return nil, err
+		return nil, ErrUserNotFound
 	}
 
 	return user, nil

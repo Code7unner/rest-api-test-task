@@ -15,14 +15,36 @@ func NewUserHandler(s service.Service) *UserHandler {
 	return &UserHandler{service: s}
 }
 
-func (h UserHandler) GetUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+func (h *UserHandler) GetCurrentUser(c echo.Context) error {
+	userID, err := getUserIDFromToken(c.Get("user"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
 
-	user, err := h.service.GetUser(id)
+	user, err := h.service.GetUser(userID)
 	switch err {
+	case service.ErrUserNotFound:
+		return c.JSON(http.StatusNotFound, nil)
 	case nil:
 		return c.JSON(http.StatusOK, user)
 	default:
-		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
+	}
+}
+
+func (h UserHandler) GetUser(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse("wrong ID"))
+	}
+
+	user, err := h.service.GetUser(id)
+	switch err {
+	case service.ErrUserNotFound:
+		return c.JSON(http.StatusNotFound, nil)
+	case nil:
+		return c.JSON(http.StatusOK, user)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse("unexpected error"))
 	}
 }

@@ -4,11 +4,13 @@ import (
 	"github.com/go-pg/pg/v10"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=../mocks/model_user_mock.go -package=mocks UserImpl
+
 type UsersImpl interface {
 	GetByID(id int) (*Users, error)
 	GetByName(name string) (*Users, error)
-	Create(user *Users) error
-	Update(user *Users) error
+	Create(user *Users) (*Users, error)
+	Update(user *Users) (*Users, error)
 }
 
 type Users struct {
@@ -50,22 +52,22 @@ func (r *UsersRepo) GetByID(id int) (*Users, error) {
 	return user, nil
 }
 
-func (r *UsersRepo) Create(user *Users) error {
+func (r *UsersRepo) Create(user *Users) (*Users, error) {
 	_, err := r.db.Model(user).
 		OnConflict("DO NOTHING").
 		Insert()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return user, nil
 }
 
-func (r *UsersRepo) Update(user *Users) error {
+func (r *UsersRepo) Update(user *Users) (*Users, error) {
 	_, err := r.db.Model(user).WherePK().UpdateNotZero()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return user, nil
 }

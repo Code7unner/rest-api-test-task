@@ -28,6 +28,7 @@ func New(s service.Service, jwtSecret []byte) *echo.Echo {
 	hu := handlers.NewUserHandler(s)
 	u := e.Group("/user")
 	u.Use(JWTmiddleware)
+	u.GET("", hu.GetCurrentUser)
 	u.GET("/:id", hu.GetUser)
 
 	return e
