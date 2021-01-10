@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/code7unner/rest-api-test-task/users/models"
+	"github.com/code7unner/rest-api-test-task/users/internal/models"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )

@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	models "github.com/code7unner/rest-api-test-task/users/models"
+	models "github.com/code7unner/rest-api-test-task/users/internal/models"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )

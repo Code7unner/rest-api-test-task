@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"bytes"
+	"github.com/code7unner/rest-api-test-task/users/internal/models"
 	service_mock "github.com/code7unner/rest-api-test-task/users/internal/service/mock"
-	"github.com/code7unner/rest-api-test-task/users/models"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/suite"

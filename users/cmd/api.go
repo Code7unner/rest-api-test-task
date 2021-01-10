@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/code7unner/rest-api-test-task/users/internal/models"
 	"github.com/code7unner/rest-api-test-task/users/internal/server"
-	"github.com/code7unner/rest-api-test-task/users/models"
 	"os"
 	"os/signal"
 

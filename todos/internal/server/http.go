@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/code7unner/rest-api-test-task/todos/internal/handlers"
 	"github.com/code7unner/rest-api-test-task/todos/internal/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -16,6 +17,11 @@ func New(s service.Service, jwtSecret []byte) *echo.Echo {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{AllowOrigins: []string{"*"}}))
+
+	ht := handlers.NewTodosHandler(s)
+	t := e.Group("/todo")
+	t.POST("", ht.CreateTodo)
+	t.PATCH("/:id", ht.UpdateTodo)
 
 	return e
 }

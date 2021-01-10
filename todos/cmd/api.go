@@ -8,9 +8,9 @@ import (
 
 	"github.com/code7unner/rest-api-test-task/todos/config"
 	"github.com/code7unner/rest-api-test-task/todos/internal/db"
+	"github.com/code7unner/rest-api-test-task/todos/internal/models"
 	"github.com/code7unner/rest-api-test-task/todos/internal/server"
 	"github.com/code7unner/rest-api-test-task/todos/internal/service"
-	"github.com/code7unner/rest-api-test-task/todos/models"
 	"github.com/labstack/gommon/log"
 	"github.com/spf13/cobra"
 )

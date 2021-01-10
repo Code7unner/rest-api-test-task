@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/code7unner/rest-api-test-task/users/internal/auth"
-	"github.com/code7unner/rest-api-test-task/users/models"
+	"github.com/code7unner/rest-api-test-task/users/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
