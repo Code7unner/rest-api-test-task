@@ -19,5 +19,5 @@ func getUserIDFromToken(t interface{}) (int, error) {
 	claims := userToken.Claims.(jwt.MapClaims)
 	userID := claims["id"].(int)
 
-	return int(userID), nil
+	return userID, nil
 }

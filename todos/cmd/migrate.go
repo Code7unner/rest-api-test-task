@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/code7unner/rest-api-test-task/users/config"
-	"github.com/code7unner/rest-api-test-task/users/internal/db"
-	_ "github.com/code7unner/rest-api-test-task/users/migrations"
+	"github.com/code7unner/rest-api-test-task/todos/config"
+	"github.com/code7unner/rest-api-test-task/todos/internal/db"
+	_ "github.com/code7unner/rest-api-test-task/todos/migrations"
 	"github.com/go-pg/migrations/v8"
 	"github.com/labstack/gommon/log"
 	"github.com/spf13/cobra"

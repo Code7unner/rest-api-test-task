@@ -14,7 +14,7 @@ type UsersImpl interface {
 }
 
 type Users struct {
-	tableName struct{} `pg:"users,alias:s"`
+	tableName struct{} `pg:"users,alias:u"`
 	ID        int
 	Username  string
 	Password  string

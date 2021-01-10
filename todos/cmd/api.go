@@ -3,30 +3,17 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/code7unner/rest-api-test-task/users/internal/server"
-	"github.com/code7unner/rest-api-test-task/users/models"
 	"os"
 	"os/signal"
 
-	"github.com/code7unner/rest-api-test-task/users/config"
-	"github.com/code7unner/rest-api-test-task/users/internal/db"
-	"github.com/code7unner/rest-api-test-task/users/internal/service"
+	"github.com/code7unner/rest-api-test-task/todos/config"
+	"github.com/code7unner/rest-api-test-task/todos/internal/db"
+	"github.com/code7unner/rest-api-test-task/todos/internal/server"
+	"github.com/code7unner/rest-api-test-task/todos/internal/service"
+	"github.com/code7unner/rest-api-test-task/todos/models"
 	"github.com/labstack/gommon/log"
 	"github.com/spf13/cobra"
 )
-
-// @title Users API
-// @version 1.0
-// @description This is a users microservice.
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @BasePath /
-
-// @securityDefinitions.apikey Bearer
-// @in header
-// @name Authorization
 
 func API(_ *cobra.Command, _ []string) {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -45,10 +32,10 @@ func API(_ *cobra.Command, _ []string) {
 	}
 	defer d.Close()
 
-	uModel := models.NewUsersModel(d)
+	tModel := models.NewTodosModel(d)
 
 	e := server.New(
-		service.New(uModel, cfg.JWTSecret, cfg.ExpiresInMinutes),
+		service.New(tModel, cfg.JWTSecret, cfg.ExpiresInMinutes),
 		[]byte(cfg.JWTSecret),
 	)
 	go func() {
@@ -72,7 +59,7 @@ func NewAPICmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "api",
 		Short: "run api",
-		Long:  "starts users API server",
+		Long:  "starts todos API server",
 		Run:   API,
 	}
 }

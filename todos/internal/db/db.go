@@ -4,7 +4,7 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/code7unner/rest-api-test-task/users/config"
+	"github.com/code7unner/rest-api-test-task/todos/config"
 	"github.com/go-pg/pg/v10"
 )
 
