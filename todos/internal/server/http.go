@@ -18,8 +18,11 @@ func New(s service.Service, jwtSecret []byte) *echo.Echo {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{AllowOrigins: []string{"*"}}))
 
+	JWTmiddleware := middleware.JWT(jwtSecret)
+
 	ht := handlers.NewTodosHandler(s)
 	t := e.Group("/todo")
+	t.Use(JWTmiddleware)
 	t.POST("", ht.CreateTodo)
 	t.PATCH("/:id", ht.UpdateTodo)
 

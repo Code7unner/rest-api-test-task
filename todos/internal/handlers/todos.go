@@ -8,7 +8,6 @@ import (
 )
 
 type TodoRequest struct {
-	UserID         int    `json:"user_id"`
 	Title          string `json:"title"`
 	Description    string `json:"description"`
 	TimeToComplete string `json:"time_to_complete"`
@@ -28,13 +27,18 @@ func (h TodosHandler) CreateTodo(c echo.Context) error {
 		return err
 	}
 
+	userID, err := getUserIDFromToken(c.Get("user"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
 	timeToComplete, err := parseDateTime(todoRequest.TimeToComplete)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, errorResponse("wrong event date"))
 	}
 
 	_, err = h.service.CreateTodo(
-		todoRequest.UserID,
+		userID,
 		todoRequest.Title,
 		todoRequest.Description,
 		timeToComplete,
@@ -54,9 +58,9 @@ func (h TodosHandler) UpdateTodo(c echo.Context) error {
 		return err
 	}
 
-	timeToComplete, err := parseDateTime(todoRequest.TimeToComplete)
+	userID, err := getUserIDFromToken(c.Get("user"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, errorResponse("wrong event date"))
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	todoID, err := strconv.Atoi(c.Param("id"))
@@ -64,9 +68,14 @@ func (h TodosHandler) UpdateTodo(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errorResponse("wrong todo id"))
 	}
 
+	timeToComplete, err := parseDateTime(todoRequest.TimeToComplete)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse("wrong event date"))
+	}
+
 	_, err = h.service.UpdateTodo(
 		todoID,
-		todoRequest.UserID,
+		userID,
 		todoRequest.Title,
 		todoRequest.Description,
 		timeToComplete,
