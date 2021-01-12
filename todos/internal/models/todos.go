@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//go:generate mockgen -source=$GOFILE -destination=../mocks/model_user_mock.go -package=mocks UserImpl
+//go:generate mockgen -source=$GOFILE -destination=../mocks/model_todos_mock.go -package=mocks TodosImpl
 
 type TodosImpl interface {
 	Get(id int) (*Todos, error)
