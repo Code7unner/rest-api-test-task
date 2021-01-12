@@ -210,7 +210,7 @@ func (s *TodosSuite) TestCreateTodo() {
 		CreateTodo(s.userID, reqStruct.Title, reqStruct.Description, s.parseTime(reqStruct.TimeToComplete)).
 		Return(nil, nil)
 	s.Require().NoError(h.CreateTodo(c))
-	s.Require().Equal(http.StatusNoContent, rec.Code)
+	s.Require().Equal(http.StatusCreated, rec.Code)
 }
 
 func TestTodosSuite(t *testing.T) {

@@ -1,0 +1,43 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    volumes:
+     - ./db-init.sh:/docker-entrypoint-initdb.d/init.sh
+    ports:
+      - "5433:5433"
+
+  api-users:
+    image: code7unner/api-users:latest
+    build:
+      context: users
+      dockerfile: Dockerfile
+    environment:
+      - DB_USERNAME=temp
+      - DB_PASSWORD=qwerty123
+      - DB_NAME=test_db
+      - DB_HOST=db
+      - JWT_SECRET=secret
+    ports:
+      - "8080:8080"
+    depends_on: 
+      - db
+
+  api-todos:
+    image: code7unner/api-todos:latest
+    build:
+      context: todos
+      dockerfile: Dockerfile
+    environment:
+      - DB_USERNAME=temp
+      - DB_PASSWORD=qwerty123
+      - DB_NAME=test_db
+      - DB_HOST=db
+      - JWT_SECRET=secret
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
