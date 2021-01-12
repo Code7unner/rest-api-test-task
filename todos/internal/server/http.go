@@ -25,6 +25,9 @@ func New(s service.Service, jwtSecret []byte) *echo.Echo {
 	t.Use(JWTmiddleware)
 	t.POST("", ht.CreateTodo)
 	t.PATCH("/:id", ht.UpdateTodo)
+	t.DELETE("/:id", ht.DeleteTodo)
+	t.GET("/all", ht.GetAllTodos)
+	t.POST("/current", ht.GetAllCurrentTodos)
 
 	return e
 }

@@ -88,3 +88,67 @@ func (h TodosHandler) UpdateTodo(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
 }
+
+func (h TodosHandler) DeleteTodo(c echo.Context) error {
+	todoRequest := new(TodoRequest)
+	if err := c.Bind(todoRequest); err != nil {
+		return err
+	}
+
+	todoID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse("wrong todo id"))
+	}
+
+	err = h.service.DeleteTodo(todoID)
+	switch err {
+	case nil:
+		return c.JSON(http.StatusOK, nil)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+}
+
+func (h TodosHandler) GetAllTodos(c echo.Context) error {
+	userID, err := getUserIDFromToken(c.Get("user"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	todos, err := h.service.GetAllTodos(userID)
+	switch err {
+	case nil:
+		return c.JSON(http.StatusOK, todos)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+}
+
+type CurrentTodoRequest struct {
+	Time string `json:"time"`
+}
+
+func (h TodosHandler) GetAllCurrentTodos(c echo.Context) error {
+	currentTodoRequest := new(CurrentTodoRequest)
+	if err := c.Bind(currentTodoRequest); err != nil {
+		return err
+	}
+
+	userID, err := getUserIDFromToken(c.Get("user"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	timeToComplete, err := parseDateTime(currentTodoRequest.Time)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, errorResponse("wrong event date"))
+	}
+
+	todos, err := h.service.GetAllCurrentTodos(userID, timeToComplete)
+	switch err {
+	case nil:
+		return c.JSON(http.StatusOK, todos)
+	default:
+		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
+	}
+}
