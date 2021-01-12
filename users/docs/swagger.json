@@ -12,9 +12,9 @@
     },
     "basePath": "/",
     "paths": {
-        "/login": {
+        "/auth/login": {
             "post": {
-                "description": "get token for user",
+                "description": "Get token for user",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,7 +27,7 @@
                 "summary": "Returns access token",
                 "parameters": [
                     {
-                        "description": "Login body",
+                        "description": "Request body",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -43,9 +43,9 @@
                 }
             }
         },
-        "/register": {
+        "/auth/register": {
             "post": {
-                "description": "register user in db",
+                "description": "Register user in db",
                 "consumes": [
                     "application/json"
                 ],
@@ -55,7 +55,7 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "Returns status code",
+                "summary": "Register user",
                 "parameters": [
                     {
                         "description": "Request body",
@@ -73,12 +73,93 @@
                     }
                 }
             }
+        },
+        "/user": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Returns current user",
+                "operationId": "get-current-user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Returns user",
+                "operationId": "get-user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Users"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "handlers.RegisterRequest": {
             "type": "object",
             "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Users": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "password": {
                     "type": "string"
                 },

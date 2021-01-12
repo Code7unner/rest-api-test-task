@@ -21,6 +21,15 @@ func NewTodosHandler(s service.Service) *TodosHandler {
 	return &TodosHandler{service: s}
 }
 
+// CreateTodo godoc
+// @Summary Create new todo task
+// @Description Create new todo task for current user
+// @Tags todos
+// @ID create-todo
+// @Produce json
+// @Success 201
+// @Security Bearer
+// @Router /todo [post]
 func (h TodosHandler) CreateTodo(c echo.Context) error {
 	todoRequest := new(TodoRequest)
 	if err := c.Bind(todoRequest); err != nil {
@@ -52,6 +61,15 @@ func (h TodosHandler) CreateTodo(c echo.Context) error {
 	}
 }
 
+// UpdateTodo godoc
+// @Summary Update todo task
+// @Description Update todo task for current user
+// @Tags todos
+// @ID update-todo
+// @Param id path int true "Todo ID"
+// @Success 204
+// @Security Bearer
+// @Router /todo/{id} [patch]
 func (h TodosHandler) UpdateTodo(c echo.Context) error {
 	todoRequest := new(TodoRequest)
 	if err := c.Bind(todoRequest); err != nil {
@@ -83,12 +101,22 @@ func (h TodosHandler) UpdateTodo(c echo.Context) error {
 
 	switch err {
 	case nil:
-		return c.JSON(http.StatusCreated, nil)
+		return c.JSON(http.StatusNoContent, nil)
 	default:
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
 }
 
+// DeleteTodo godoc
+// @Summary Delete todo task
+// @Description Delete todo task for current user
+// @Tags todos
+// @ID delete-todo
+// @Param id path int true "Todo ID"
+// @Produce json
+// @Success 204
+// @Security Bearer
+// @Router /todo/:id [delete]
 func (h TodosHandler) DeleteTodo(c echo.Context) error {
 	todoRequest := new(TodoRequest)
 	if err := c.Bind(todoRequest); err != nil {
@@ -103,12 +131,21 @@ func (h TodosHandler) DeleteTodo(c echo.Context) error {
 	err = h.service.DeleteTodo(todoID)
 	switch err {
 	case nil:
-		return c.JSON(http.StatusOK, nil)
+		return c.JSON(http.StatusNoContent, nil)
 	default:
 		return c.JSON(http.StatusInternalServerError, errorResponse(err.Error()))
 	}
 }
 
+// GetAllTodos godoc
+// @Summary Get all todos
+// @Description Gets all todos for current user
+// @Tags todos
+// @ID get-all-todos
+// @Produce json
+// @Success 200 {object} []models.Todos
+// @Security Bearer
+// @Router /todo/all [get]
 func (h TodosHandler) GetAllTodos(c echo.Context) error {
 	userID, err := getUserIDFromToken(c.Get("user"))
 	if err != nil {
@@ -128,6 +165,16 @@ type CurrentTodoRequest struct {
 	Time string `json:"time"`
 }
 
+// GetAllCurrentTodos godoc
+// @Summary Get all current todos
+// @Description Gets all current todos for current user
+// @Tags todos
+// @ID get-all-current-todos
+// @Produce json
+// @Param request body CurrentTodoRequest true "Request body"
+// @Success 200 {object} []models.Todos
+// @Security Bearer
+// @Router /todo/current [post]
 func (h TodosHandler) GetAllCurrentTodos(c echo.Context) error {
 	currentTodoRequest := new(CurrentTodoRequest)
 	if err := c.Bind(currentTodoRequest); err != nil {

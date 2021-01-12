@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  handlers.CurrentTodoRequest:
+    properties:
+      time:
+        type: string
+    type: object
+  models.Todos:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      timeToComplete:
+        type: string
+      title:
+        type: string
+      userID:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: This is a todos microservice.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Todos API
+  version: "1.0"
+paths:
+  /todo:
+    post:
+      description: Create new todo task for current user
+      operationId: create-todo
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ""
+      security:
+      - Bearer: []
+      summary: Create new todo task
+      tags:
+      - todos
+  /todo/:id:
+    delete:
+      description: Delete todo task for current user
+      operationId: delete-todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+      security:
+      - Bearer: []
+      summary: Delete todo task
+      tags:
+      - todos
+  /todo/{id}:
+    patch:
+      description: Update todo task for current user
+      operationId: update-todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: ""
+      security:
+      - Bearer: []
+      summary: Update todo task
+      tags:
+      - todos
+  /todo/all:
+    get:
+      description: Gets all todos for current user
+      operationId: get-all-todos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todos'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all todos
+      tags:
+      - todos
+  /todo/current:
+    post:
+      description: Gets all current todos for current user
+      operationId: get-all-current-todos
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CurrentTodoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todos'
+            type: array
+      security:
+      - Bearer: []
+      summary: Get all current todos
+      tags:
+      - todos
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

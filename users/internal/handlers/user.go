@@ -15,6 +15,16 @@ func NewUserHandler(s service.Service) *UserHandler {
 	return &UserHandler{service: s}
 }
 
+// GetCurrentUser godoc
+// @Summary Returns current user
+// @Description Get current user
+// @Tags users
+// @ID get-current-user
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Users
+// @Security Bearer
+// @Router /user [get]
 func (h *UserHandler) GetCurrentUser(c echo.Context) error {
 	userID, err := getUserIDFromToken(c.Get("user"))
 	if err != nil {
@@ -32,6 +42,17 @@ func (h *UserHandler) GetCurrentUser(c echo.Context) error {
 	}
 }
 
+// GetUser godoc
+// @Summary Returns user
+// @Description Get user
+// @Tags users
+// @ID get-user
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.Users
+// @Security Bearer
+// @Router /user/{id} [get]
 func (h UserHandler) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

@@ -7,6 +7,15 @@ definitions:
       username:
         type: string
     type: object
+  models.Users:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+      username:
+        type: string
+    type: object
 info:
   contact: {}
   description: This is a users microservice.
@@ -16,13 +25,13 @@ info:
   title: Users API
   version: "1.0"
 paths:
-  /login:
+  /auth/login:
     post:
       consumes:
       - application/json
-      description: get token for user
+      description: Get token for user
       parameters:
-      - description: Login body
+      - description: Request body
         in: body
         name: request
         required: true
@@ -36,11 +45,11 @@ paths:
       summary: Returns access token
       tags:
       - auth
-  /register:
+  /auth/register:
     post:
       consumes:
       - application/json
-      description: register user in db
+      description: Register user in db
       parameters:
       - description: Request body
         in: body
@@ -53,9 +62,51 @@ paths:
       responses:
         "201":
           description: ""
-      summary: Returns status code
+      summary: Register user
       tags:
       - auth
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: Get current user
+      operationId: get-current-user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+      security:
+      - Bearer: []
+      summary: Returns current user
+      tags:
+      - users
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user
+      operationId: get-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Users'
+      security:
+      - Bearer: []
+      summary: Returns user
+      tags:
+      - users
 securityDefinitions:
   Bearer:
     in: header

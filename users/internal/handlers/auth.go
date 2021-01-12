@@ -20,14 +20,14 @@ func NewAuthHandler(s service.Service) *AuthHandler {
 }
 
 // Register godoc
-// @Summary Returns status code
-// @Description register user in db
+// @Summary Register user
+// @Description Register user in db
 // @Tags auth
 // @Accept json
 // @Produce json
 // @Param request body RegisterRequest true "Request body"
 // @Success 201
-// @Router /register [post]
+// @Router /auth/register [post]
 func (h AuthHandler) Register(c echo.Context) error {
 	request := new(RegisterRequest)
 	if err := c.Bind(request); err != nil {
@@ -49,13 +49,13 @@ func (h AuthHandler) Register(c echo.Context) error {
 
 // Login godoc
 // @Summary Returns access token
-// @Description get token for user
+// @Description Get token for user
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param request body RegisterRequest true "Login body"
+// @Param request body RegisterRequest true "Request body"
 // @Success 200
-// @Router /login [post]
+// @Router /auth/login [post]
 func (h AuthHandler) Login(c echo.Context) error {
 	request := new(RegisterRequest)
 	if err := c.Bind(request); err != nil {

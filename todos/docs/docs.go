@@ -28,61 +28,22 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
+        "/todo": {
             "post": {
-                "description": "Get token for user",
-                "consumes": [
-                    "application/json"
+                "security": [
+                    {
+                        "Bearer": []
+                    }
                 ],
+                "description": "Create new todo task for current user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "todos"
                 ],
-                "summary": "Returns access token",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handlers.RegisterRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    }
-                }
-            }
-        },
-        "/auth/register": {
-            "post": {
-                "description": "Register user in db",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Register user",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handlers.RegisterRequest"
-                        }
-                    }
-                ],
+                "summary": "Create new todo task",
+                "operationId": "create-todo",
                 "responses": {
                     "201": {
                         "description": ""
@@ -90,97 +51,163 @@ var doc = `{
                 }
             }
         },
-        "/user": {
-            "get": {
+        "/todo/:id": {
+            "delete": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "Get current user",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Delete todo task for current user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "todos"
                 ],
-                "summary": "Returns current user",
-                "operationId": "get-current-user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Users"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Get user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Returns user",
-                "operationId": "get-user",
+                "summary": "Delete todo task",
+                "operationId": "delete-todo",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "User ID",
+                        "description": "Todo ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/todo/all": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Gets all todos for current user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get all todos",
+                "operationId": "get-all-todos",
+                "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Users"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Todos"
+                            }
                         }
+                    }
+                }
+            }
+        },
+        "/todo/current": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Gets all current todos for current user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get all current todos",
+                "operationId": "get-all-current-todos",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CurrentTodoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Todos"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/todo/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update todo task for current user",
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Update todo task",
+                "operationId": "update-todo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
                     }
                 }
             }
         }
     },
     "definitions": {
-        "handlers.RegisterRequest": {
+        "handlers.CurrentTodoRequest": {
             "type": "object",
             "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
+                "time": {
                     "type": "string"
                 }
             }
         },
-        "models.Users": {
+        "models.Todos": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
-                "password": {
+                "timeToComplete": {
                     "type": "string"
                 },
-                "username": {
+                "title": {
                     "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
                 }
             }
         }
@@ -209,8 +236,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "Users API",
-	Description: "This is a users microservice.",
+	Title:       "Todos API",
+	Description: "This is a todos microservice.",
 }
 
 type s struct{}

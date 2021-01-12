@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate swag i -g cmd/api.go -o docs
+
 func main() {
 	rootCmd := &cobra.Command{Use: "todos"}
 	rootCmd.AddCommand(cmd.NewAPICmd(), cmd.NewMigrateCmd())

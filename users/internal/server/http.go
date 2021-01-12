@@ -1,6 +1,7 @@
 package server
 
 import (
+	_ "github.com/code7unner/rest-api-test-task/users/docs"
 	"github.com/code7unner/rest-api-test-task/users/internal/handlers"
 	"github.com/code7unner/rest-api-test-task/users/internal/service"
 	"github.com/labstack/echo/v4"

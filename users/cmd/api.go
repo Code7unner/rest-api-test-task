@@ -27,7 +27,6 @@ import (
 // @securityDefinitions.apikey Bearer
 // @in header
 // @name Authorization
-
 func API(_ *cobra.Command, _ []string) {
 	ctx, cancel := context.WithCancel(context.Background())
 
