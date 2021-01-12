@@ -54,6 +54,8 @@ func (h TodosHandler) CreateTodo(c echo.Context) error {
 	)
 
 	switch err {
+	case service.ErrTodoNotCreated:
+		return c.JSON(http.StatusBadRequest, err)
 	case nil:
 		return c.JSON(http.StatusCreated, nil)
 	default:
@@ -100,6 +102,10 @@ func (h TodosHandler) UpdateTodo(c echo.Context) error {
 	)
 
 	switch err {
+	case service.ErrTodoNotFound:
+		return c.JSON(http.StatusBadRequest, err)
+	case service.ErrTodoNotUpdated:
+		return c.JSON(http.StatusBadRequest, err)
 	case nil:
 		return c.JSON(http.StatusNoContent, nil)
 	default:
@@ -130,6 +136,10 @@ func (h TodosHandler) DeleteTodo(c echo.Context) error {
 
 	err = h.service.DeleteTodo(todoID)
 	switch err {
+	case service.ErrTodoNotFound:
+		return c.JSON(http.StatusBadRequest, err)
+	case service.ErrTodoNotDeleted:
+		return c.JSON(http.StatusBadRequest, err)
 	case nil:
 		return c.JSON(http.StatusNoContent, nil)
 	default:
@@ -154,6 +164,8 @@ func (h TodosHandler) GetAllTodos(c echo.Context) error {
 
 	todos, err := h.service.GetAllTodos(userID)
 	switch err {
+	case service.ErrTodosNotFound:
+		return c.JSON(http.StatusBadRequest, err)
 	case nil:
 		return c.JSON(http.StatusOK, todos)
 	default:
@@ -193,6 +205,8 @@ func (h TodosHandler) GetAllCurrentTodos(c echo.Context) error {
 
 	todos, err := h.service.GetAllCurrentTodos(userID, timeToComplete)
 	switch err {
+	case service.ErrTodosNotFound:
+		return c.JSON(http.StatusBadRequest, err)
 	case nil:
 		return c.JSON(http.StatusOK, todos)
 	default:

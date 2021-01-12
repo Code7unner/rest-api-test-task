@@ -39,25 +39,26 @@ func (s service) CreateTodo(userID int, title string, desc string, t time.Time) 
 	}
 
 	if _, err := s.todos.Create(todo); err != nil {
-		// TODO
-		return nil, err
+		return nil, ErrTodoNotCreated
 	}
 
 	return todo, nil
 }
 
 func (s service) UpdateTodo(id int, userID int, title string, desc string, t time.Time) (*models.Todos, error) {
-	todo := &models.Todos{
-		ID:             id,
-		UserID:         userID,
-		Title:          title,
-		Description:    desc,
-		TimeToComplete: t,
+	todo, err := s.todos.Get(id)
+	if err != nil {
+		return nil, ErrTodoNotFound
 	}
 
+	todo.ID = id
+	todo.UserID = userID
+	todo.Title = title
+	todo.Description = desc
+	todo.TimeToComplete = t
+
 	if _, err := s.todos.Update(todo); err != nil {
-		// TODO
-		return nil, err
+		return nil, ErrTodoNotUpdated
 	}
 
 	return todo, nil
@@ -66,13 +67,11 @@ func (s service) UpdateTodo(id int, userID int, title string, desc string, t tim
 func (s service) DeleteTodo(id int) error {
 	todo, err := s.todos.Get(id)
 	if err != nil {
-		// TODO
-		return err
+		return ErrTodoNotFound
 	}
 
 	if err := s.todos.Delete(todo); err != nil {
-		// TODO
-		return err
+		return ErrTodoNotDeleted
 	}
 
 	return nil
@@ -81,8 +80,7 @@ func (s service) DeleteTodo(id int) error {
 func (s service) GetAllTodos(userID int) ([]models.Todos, error) {
 	todos, err := s.todos.GetAll(userID)
 	if err != nil {
-		// TODO
-		return nil, err
+		return nil, ErrTodosNotFound
 	}
 
 	sort.Slice(todos, func(i, j int) bool {
@@ -95,7 +93,7 @@ func (s service) GetAllTodos(userID int) ([]models.Todos, error) {
 func (s service) GetAllCurrentTodos(userID int, t time.Time) ([]models.Todos, error) {
 	todos, err := s.todos.GetAll(userID)
 	if err != nil {
-		return nil, err
+		return nil, ErrTodosNotFound
 	}
 
 	parsedTodos := make([]models.Todos, 0)
