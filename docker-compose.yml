@@ -1,14 +1,17 @@
 version: "3.3"
 services:
   db:
-    image: postgres:12-alpine
+    container_name: db
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    hostname: db
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-    volumes:
-     - ./db-init.sh:/docker-entrypoint-initdb.d/init.sh
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test_db
     ports:
-      - "5433:5433"
+      - "5432:5432"
 
   api-users:
     image: code7unner/api-users:latest
@@ -16,14 +19,12 @@ services:
       context: users
       dockerfile: Dockerfile
     environment:
-      - DB_USERNAME=temp
-      - DB_PASSWORD=qwerty123
-      - DB_NAME=test_db
-      - DB_HOST=db
-      - JWT_SECRET=secret
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: test_db
     ports:
       - "8080:8080"
-    depends_on: 
+    depends_on:
       - db
 
   api-todos:
@@ -32,11 +33,9 @@ services:
       context: todos
       dockerfile: Dockerfile
     environment:
-      - DB_USERNAME=temp
-      - DB_PASSWORD=qwerty123
-      - DB_NAME=test_db
-      - DB_HOST=db
-      - JWT_SECRET=secret
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: test_db
     ports:
       - "8081:8081"
     depends_on:

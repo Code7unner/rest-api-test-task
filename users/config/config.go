@@ -5,11 +5,11 @@ import "github.com/caarlos0/env"
 // Config all app variables are stored here
 type Config struct {
 	// Postgres db connection
-	Username  string `env:"DB_USERNAME,required"`
-	Password  string `env:"DB_PASSWORD,required"`
-	Host      string `env:"DB_HOST" envDefault:"localhost"`
+	Username  string `env:"DB_USERNAME"`
+	Password  string `env:"DB_PASSWORD"`
+	Host      string `env:"DB_HOST" envDefault:"db"`
 	Port      int    `env:"DB_PORT" envDefault:"5432"`
-	DbName    string `env:"DB_NAME,required"`
+	DbName    string `env:"DB_NAME" envDefault:"test_db"`
 	SslEnable bool   `env:"DB_SSL_ENABLE" envDefault:"false"`
 
 	DebugMode        bool   `env:"DEBUG_MODE" envDefault:"false"`

@@ -27,6 +27,7 @@ func NewTodosHandler(s service.Service) *TodosHandler {
 // @Tags todos
 // @ID create-todo
 // @Produce json
+// @Param request body TodoRequest true "Request body"
 // @Success 201
 // @Security Bearer
 // @Router /todo [post]

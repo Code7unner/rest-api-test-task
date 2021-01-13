@@ -16,7 +16,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=mod .
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
-# Command to run migrations
-CMD ["/app/users", "migrate", "up"]
-# Command to run the executable
+# Command to run wait-for db connection script
+CMD ["./wait-for", "db:5432", "-t", "30"]
+
+## Command to run the executable
 CMD ["/app/users", "api"]

@@ -5,6 +5,15 @@ definitions:
       time:
         type: string
     type: object
+  handlers.TodoRequest:
+    properties:
+      description:
+        type: string
+      time_to_complete:
+        type: string
+      title:
+        type: string
+    type: object
   models.Todos:
     properties:
       description:
@@ -31,6 +40,13 @@ paths:
     post:
       description: Create new todo task for current user
       operationId: create-todo
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.TodoRequest'
       produces:
       - application/json
       responses:

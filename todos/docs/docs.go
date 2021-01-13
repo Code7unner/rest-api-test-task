@@ -44,6 +44,17 @@ var doc = `{
                 ],
                 "summary": "Create new todo task",
                 "operationId": "create-todo",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.TodoRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": ""
@@ -187,6 +198,20 @@ var doc = `{
             "type": "object",
             "properties": {
                 "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.TodoRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "time_to_complete": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
